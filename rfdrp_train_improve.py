@@ -50,6 +50,7 @@ def run(params: Dict) -> Dict:
     # Train data
     xtr = extract_subset_fea(tr_data, fea_list=fea_list, fea_sep=fea_sep)
     ytr = tr_data[[params["y_col_name"]]]
+    ytr = ytr.values.squeeze()
     print("xtr:", xtr.shape)
     print("ytr:", ytr.shape)
 
