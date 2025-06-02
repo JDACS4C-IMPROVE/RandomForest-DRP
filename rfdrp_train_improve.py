@@ -75,7 +75,7 @@ def run(params: Dict) -> Dict:
     early_stop = 0
     while rounds < params['epochs'] and early_stop < params['patience']:
         rounds = rounds + 1
-        model.set_params(n_estimators=1, warm_start=True)
+        model.set_params(n_estimators=rounds, warm_start=True)
         model.fit(xtr, ytr)
         val_pred = model.predict(xvl)
         val_metrics = compute_metrics(y_true=val_true, y_pred=val_pred, metric_type=params['metric_type'])
