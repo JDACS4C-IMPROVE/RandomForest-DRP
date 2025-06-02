@@ -58,15 +58,34 @@ def run(params: Dict) -> Dict:
     yvl = vl_data[[params["y_col_name"]]]
     print("xvl:", xvl.shape)
     print("yvl:", yvl.shape)
-
+    val_true = yvl.values.squeeze()
     # ------------------------------------------------------
     # Prepare, train, and save model
     # ------------------------------------------------------
 
-    model = RandomForestRegressor(max_depth=2, random_state=0)
+    # n_estimators is treated as epochs
+    # initial round
+    model = RandomForestRegressor(max_depth=None, n_estimators=1)
     model.fit(xtr, ytr)
-
+    val_pred = model.predict(xvl)
+    val_metrics = compute_metrics(y_true=val_true, y_pred=val_pred, metric_type=params['metric_type'])
+    best_loss = val_metrics[params['loss']]
     joblib.dump(model, str(modelpath))
+    while rounds < (params['epochs']-1) and early_stop < params['patience']:
+        rounds = rounds + 1
+        model.set_params(n_estimators=1, warm_start=True)
+        model.fit(xtr, ytr)
+        val_pred = model.predict(xvl)
+        val_metrics = compute_metrics(y_true=val_true, y_pred=val_pred, metric_type=params['metric_type'])
+        val_loss = val_metrics[params['loss']]
+        if val_loss < best_loss:
+            early_stop = 0
+            best_loss = val_loss
+            joblib.dump(model, str(modelpath))
+        else:
+            early_stop = early_stop + 1
+        print(f"Epoch: {rounds}, val_loss: {val_loss}, epochs since improvement: {early_stop}")
+
     del model
 
     # ------------------------------------------------------
@@ -77,7 +96,7 @@ def run(params: Dict) -> Dict:
 
     # Compute predictions
     val_pred = model.predict(xvl)
-    val_true = yvl.values.squeeze()
+    
    
      # ------------------------------------------------------
     # [Req] Save raw predictions in dataframe
