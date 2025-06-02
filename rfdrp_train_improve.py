@@ -72,6 +72,7 @@ def run(params: Dict) -> Dict:
     best_loss = val_metrics[params['loss']]
     joblib.dump(model, str(modelpath))
     rounds = 1
+    early_stop = 0
     while rounds < params['epochs'] and early_stop < params['patience']:
         rounds = rounds + 1
         model.set_params(n_estimators=1, warm_start=True)
