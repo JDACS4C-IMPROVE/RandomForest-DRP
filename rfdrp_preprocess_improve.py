@@ -43,10 +43,10 @@ def run(params: Dict):
                                    y_data_file=params['y_data_file'])
     
     print("Find intersection of training data.")
-    response_train = frm.get_response_with_features(response_train, ge, params['canc_col_name'])
-    response_train = frm.get_response_with_features(response_train, md, params['drug_col_name'])
-    ge_train = frm.get_features_in_response(ge, response_train, params['canc_col_name'])
-    md_train = frm.get_features_in_response(md, response_train, params['drug_col_name'])
+    response_train = frm.get_y_data_with_features(response_train, ge, params['canc_col_name'])
+    response_train = frm.get_y_data_with_features(response_train, md, params['drug_col_name'])
+    ge_train = frm.get_features_in_y_data(ge, response_train, params['canc_col_name'])
+    md_train = frm.get_features_in_y_data(md, response_train, params['drug_col_name'])
 
     print("Determine transformations.")
     frm.determine_transform(ge_train, 'ge_transform', params['cell_transcriptomic_transform'], params['output_dir'])
@@ -66,10 +66,10 @@ def run(params: Dict):
         response_stage = frm.get_y_data(split_file=split_file, 
                                 benchmark_dir=params['input_dir'], 
                                 y_data_file=params['y_data_file'])
-        response_stage = frm.get_response_with_features(response_stage, ge, params['canc_col_name'])
-        response_stage = frm.get_response_with_features(response_stage, md, params['drug_col_name'])
-        ge_stage = frm.get_features_in_response(ge, response_stage, params['canc_col_name'])
-        md_stage = frm.get_features_in_response(md, response_stage, params['drug_col_name'])
+        response_stage = frm.get_y_data_with_features(response_stage, ge, params['canc_col_name'])
+        response_stage = frm.get_y_data_with_features(response_stage, md, params['drug_col_name'])
+        ge_stage = frm.get_features_in_y_data(ge, response_stage, params['canc_col_name'])
+        md_stage = frm.get_features_in_y_data(md, response_stage, params['drug_col_name'])
 
         print(f"Transform {stage} data.")
         ge_stage = frm.transform_data(ge_stage, 'ge_transform', params['output_dir'])
