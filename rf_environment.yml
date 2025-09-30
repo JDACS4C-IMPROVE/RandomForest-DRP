@@ -1,0 +1,12 @@
+name: rf
+channels:
+  - conda-forge
+  - anaconda
+  - bioconda
+dependencies:
+  - pandas
+  - pyarrow
+  - python=3.7
+  - pyyaml
+  - scikit-learn
+
